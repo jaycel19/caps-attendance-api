@@ -1,0 +1,8 @@
+CREATE TABLE IF NOT EXISTS events (
+	"id" uuid PRIMARY KEY NOT NULL DEFAULT (uuid_generate_v4()),
+	"name" varchar NOT NULL,
+	"start_time" TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+	"end_time" TIMESTAMP WITH TIME ZONE DEFAULT NOW (),
+	"created_at" TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+	"updated_at" TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
