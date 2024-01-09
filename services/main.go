@@ -14,4 +14,9 @@ func New (dbPool *sql.DB) Models {
 	return Models{}
 }
 
-type Models struct {}
+type Models struct {
+	Student Student
+	Event Event
+	Attendance Attendance
+	JsonResponse JsonResponse
+}

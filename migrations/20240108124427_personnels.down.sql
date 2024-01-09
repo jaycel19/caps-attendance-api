@@ -1,1 +1,1 @@
-DROP TABLE IF EXISTS personnels;
+--DROP TABLE IF EXISTS personnels;
