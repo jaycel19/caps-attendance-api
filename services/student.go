@@ -167,7 +167,7 @@ func (s *Student) DeleteStudent(id uuid.UUID) error {
 	return nil
 }
 
-func (s *Student) CreateComment(student Student) (*Student, error) {
+func (s *Student) CreateStudent(student Student) (*Student, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
 
