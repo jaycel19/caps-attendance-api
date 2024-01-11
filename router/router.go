@@ -21,8 +21,9 @@ func Routes() http.Handler {
 		MaxAge:           300,
 	}))
 	// Students routes
-	router.Get("/api/v1/", controllers.GetHome)
 	router.Get("/api/v1/students", controllers.GetAllStudents)
+	router.Get("/api/v1/students/{id}", controllers.GetStudentById)
+	router.Get("/api/v1/students/{course}", controllers.GetStudentsByCourse)
 	router.Post("/api/v1/students", controllers.CreateStudent)
 	router.Put("/api/v1/students/{id}", controllers.UpdateStudent)
 	router.Delete("/api/v1/students/{id}", controllers.DeleteStudent)

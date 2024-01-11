@@ -2,6 +2,7 @@ package services
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/google/uuid"
@@ -20,7 +21,7 @@ func (s *Student) GetAllStudents() ([]*Student, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
 
-	query := `select * from comments`
+	query := `select * from students`
 
 	rows, err := db.QueryContext(ctx, query)
 	if err != nil {
@@ -139,7 +140,7 @@ func (s *Student) UpdateStudent(id uuid.UUID, body Student) (*Student, error) {
 			updated_at = $4
 		WHERE id=$5
 	`
-
+	fmt.Println(body.YearLevel)
 	_, err := db.ExecContext(
 		ctx,
 		query,
@@ -149,9 +150,11 @@ func (s *Student) UpdateStudent(id uuid.UUID, body Student) (*Student, error) {
 		time.Now(),
 		id,
 	)
+
 	if err != nil {
 		return nil, err
 	}
+
 	return &body, nil
 }
 

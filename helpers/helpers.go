@@ -3,7 +3,6 @@ package helpers
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io"
 	"log"
 	"net/http"

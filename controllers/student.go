@@ -16,7 +16,7 @@ func GetAllStudents(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		helpers.MessageLogs.ErrorLog.Println(err)
 	}
-	helpers.WriteJSON(w, http.StatusOK, helpers.Envelope{"comments": all})
+	helpers.WriteJSON(w, http.StatusOK, helpers.Envelope{"students": all})
 }
 
 func GetStudentById(w http.ResponseWriter, r *http.Request) {
@@ -38,6 +38,9 @@ func GetStudentById(w http.ResponseWriter, r *http.Request) {
 func GetStudentsByCourse(w http.ResponseWriter, r *http.Request) {
 	program := chi.URLParam(r, "course")
 	students, err := models.Student.GetByCourses(program)
+	if students == nil {
+		helpers.WriteJSON(w, http.StatusNoContent, helpers.Envelope{})
+	}
 	if err != nil {
 		helpers.MessageLogs.ErrorLog.Println(err)
 		return
@@ -63,12 +66,19 @@ func CreateStudent(w http.ResponseWriter, r *http.Request) {
 
 func UpdateStudent(w http.ResponseWriter, r *http.Request) {
 	var studentPayload services.Student
-	err := json.NewDecoder(r.Body).Decode(&studentPayload)
+	id := chi.URLParam(r, "id")
+	conv_id, err := uuid.Parse(id)
+	if err != nil {
+		helpers.MessageLogs.ErrorLog.Println(err)
+	}
+
+	err = json.NewDecoder(r.Body).Decode(&studentPayload)
+	
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	updatedStudent, err := models.Student.UpdateStudent(studentPayload.ID, studentPayload)
+	updatedStudent, err := models.Student.UpdateStudent(conv_id, studentPayload)
 	helpers.WriteJSON(w, http.StatusOK, updatedStudent)
 	if err != nil {
 		helpers.MessageLogs.ErrorLog.Println(err)
