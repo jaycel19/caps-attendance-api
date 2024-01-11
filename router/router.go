@@ -28,5 +28,13 @@ func Routes() http.Handler {
 	router.Put("/api/v1/students/{id}", controllers.UpdateStudent)
 	router.Delete("/api/v1/students/{id}", controllers.DeleteStudent)
 
+	// Event routes
+	router.Get("/api/v1/events", controllers.GetAllEvents)
+	router.Get("/api/v1/events/{id}", controllers.GetEventById)
+	//router.Get("/api/v1/events/{course}", controllers.GetEventByCourse)
+	router.Post("/api/v1/events", controllers.CreateEvent)
+	router.Put("/api/v1/events/{id}", controllers.UpdateEvent)
+	router.Delete("/api/v1/events/{id}", controllers.DeleteEvent)
+
 	return router
 }

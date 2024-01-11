@@ -57,6 +57,7 @@ func (e *Event) GetEventById(id uuid.UUID) (*Event, error) {
 	row := db.QueryRowContext(ctx, query, id)
 	err := row.Scan(
 		&event.ID,
+		&event.Name,
 		&event.StartTime,
 		&event.EndTime,
 		&event.CreatedAt,
