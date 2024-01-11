@@ -20,8 +20,12 @@ func Routes() http.Handler {
 		AllowCredentials: true,
 		MaxAge:           300,
 	}))
-
+	// Students routes
 	router.Get("/api/v1/", controllers.GetHome)
+	router.Get("/api/v1/students", controllers.GetAllStudents)
+	router.Post("/api/v1/students", controllers.CreateStudent)
+	router.Put("/api/v1/students/{id}", controllers.UpdateStudent)
+	router.Delete("/api/v1/students/{id}", controllers.DeleteStudent)
 
 	return router
 }
