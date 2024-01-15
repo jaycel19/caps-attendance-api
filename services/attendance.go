@@ -182,7 +182,7 @@ func (a *Attendance) GetByAttendeeID(attendeeID uuid.UUID) ([]*Attendance, error
 func (a *Attendance) GetByEventId(eventId uuid.UUID) ([]*Attendance, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
-	query := `select id, event, time_in, scanned_by from attendance where event = $1`
+	query := `select id, attendee, event, time_in, scanned_by from attendance where event = $1`
 
 	rows, err := db.QueryContext(ctx, query, eventId)
 	if err != nil {
@@ -193,6 +193,7 @@ func (a *Attendance) GetByEventId(eventId uuid.UUID) ([]*Attendance, error) {
 		var attendance Attendance 
 		err := rows.Scan(
 			&attendance.ID,
+			&attendance.Attendee,
 			&attendance.Event,
 			&attendance.TimeIn,
 			&attendance.ScannedBy,

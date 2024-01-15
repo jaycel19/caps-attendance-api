@@ -16,6 +16,7 @@ func New (dbPool *sql.DB) Models {
 
 type Models struct {
 	Attendee Attendee
+	Admin Admin
 	Event Event
 	Attendance Attendance
 	Personnel Personnel
