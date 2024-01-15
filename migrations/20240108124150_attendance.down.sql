@@ -1,5 +1,5 @@
 DROP TABLE IF EXISTS attendance;
-DROP TABLE IF EXISTS students;
+DROP TABLE IF EXISTS attendees;
 DROP TABLE IF EXISTS admin;
 DROP TABLE IF EXISTS personnels;
 DROP TABLE IF EXISTS instructors;

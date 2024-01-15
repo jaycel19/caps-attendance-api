@@ -15,8 +15,9 @@ func New (dbPool *sql.DB) Models {
 }
 
 type Models struct {
-	Student Student
+	Attendee Attendee
 	Event Event
 	Attendance Attendance
+	Personnel Personnel
 	JsonResponse JsonResponse
 }

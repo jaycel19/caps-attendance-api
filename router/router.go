@@ -20,13 +20,13 @@ func Routes() http.Handler {
 		AllowCredentials: true,
 		MaxAge:           300,
 	}))
-	// Students routes
-	router.Get("/api/v1/students", controllers.GetAllStudents)
-	router.Get("/api/v1/students/{id}", controllers.GetStudentById)
-	router.Get("/api/v1/students/{course}", controllers.GetStudentsByCourse)
-	router.Post("/api/v1/students", controllers.CreateStudent)
-	router.Put("/api/v1/students/{id}", controllers.UpdateStudent)
-	router.Delete("/api/v1/students/{id}", controllers.DeleteStudent)
+	// Attendees routes
+	router.Get("/api/v1/attendees", controllers.GetAllAttendees)
+	router.Get("/api/v1/attendees/{id}", controllers.GetAttendeeById)
+	router.Get("/api/v1/attendees/{course}", controllers.GetAttendeesByCourse)
+	router.Post("/api/v1/attendees", controllers.CreateAttendee)
+	router.Put("/api/v1/attendees/{id}", controllers.UpdateAttendee)
+	router.Delete("/api/v1/attendees/{id}", controllers.DeleteAttendee)
 
 	// Event routes
 	router.Get("/api/v1/events", controllers.GetAllEvents)
@@ -35,6 +35,25 @@ func Routes() http.Handler {
 	router.Post("/api/v1/events", controllers.CreateEvent)
 	router.Put("/api/v1/events/{id}", controllers.UpdateEvent)
 	router.Delete("/api/v1/events/{id}", controllers.DeleteEvent)
+	
+	// Attendance routes
+	router.Get("/api/v1/attendances", controllers.GetAllAttendance)
+	router.Get("/api/v1/attendances/{id}", controllers.GetAttendanceById)
+	router.Get("/api/v1/attendances/attendee/{id}", controllers.GetAttendanceByAttendeeId)
+	router.Get("/api/v1/attendances/event/{id}", controllers.GetAttendanceByEventId)
+	router.Get("/api/v1/attendances/{timestart}/{timeend}", controllers.GetAttendanceByRange)
+	router.Post("/api/v1/attendances", controllers.CreateAttendance)
+	router.Put("/api/v1/attendances/{id}", controllers.UpdateAttendance)
+	router.Delete("/api/v1/attendances/{id}", controllers.DeleteAttendance)
+	
+	// Personnel routes
+	router.Get("/api/v1/personnels", controllers.GetAllPersonnel)
+	router.Get("/api/v1/personnels/{id}", controllers.GetPersonnelById)
+	//router.Get("/api/v1/events/{course}", controllers.GetEventByCourse)
+	router.Post("/api/v1/personnels", controllers.CreatePersonnel)
+	router.Put("/api/v1/personnels/{id}", controllers.UpdatePersonnel)
+	router.Delete("/api/v1/personnels/{id}", controllers.DeletePersonnel)
+	
 
 	return router
 }

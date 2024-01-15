@@ -35,20 +35,6 @@ func GetEventById(w http.ResponseWriter, r *http.Request) {
 	helpers.WriteJSON(w, http.StatusOK, event)
 }
 
-func GetEventByCourse(w http.ResponseWriter, r *http.Request) {
-	program := chi.URLParam(r, "course")
-	students, err := models.Student.GetByCourses(program)
-	if students == nil {
-		helpers.WriteJSON(w, http.StatusNoContent, helpers.Envelope{})
-	}
-	if err != nil {
-		helpers.MessageLogs.ErrorLog.Println(err)
-		return
-	}
-	// TODO: handle error
-	helpers.WriteJSON(w, http.StatusOK, students)
-}
-
 func CreateEvent(w http.ResponseWriter, r *http.Request) {
 	var eventPayload services.Event
 	err := json.NewDecoder(r.Body).Decode(&eventPayload)

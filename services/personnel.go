@@ -103,7 +103,7 @@ func (p *Personnel) DeletePersonnel(id uuid.UUID) error {
 	return nil
 }
 
-func (s *Student) CreatePersonnel(personnel Personnel) (*Personnel, error) {
+func (p *Personnel) CreatePersonnel(personnel Personnel) (*Personnel, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
 
