@@ -10,8 +10,29 @@ import (
 type Personnel struct {
 	ID uuid.UUID `json:"id"`
 	Name string `json:"name"`
+	Username string `json:"username"`
+	Password string `json:"password"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"upated_at"`
+}
+
+func (p *Personnel) PersonnelLogin(personnelPayload Personnel) (*Personnel, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+	defer cancel()
+	query := `select * from personnels where username = $1`
+
+	var personnel Personnel
+
+	row := db.QueryRowContext(ctx, query, personnelPayload.Username)
+	err := row.Scan(
+		&personnel.Username,
+		&personnel.Password,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	return &personnel, nil
 }
 
 func (p *Personnel) GetAllPersonnel() ([]*Personnel, error) {
@@ -30,6 +51,8 @@ func (p *Personnel) GetAllPersonnel() ([]*Personnel, error) {
 		err := rows.Scan(
 			&personnel.ID,
 			&personnel.Name,
+			&personnel.Username,
+			&personnel.Password,
 			&personnel.UpdatedAt,
 			&personnel.CreatedAt,
 		)
@@ -55,6 +78,8 @@ func (p *Personnel) GetPersonnelById(id uuid.UUID) (*Personnel, error) {
 	err := row.Scan(
 		&personnel.ID,
 		&personnel.Name,
+		&personnel.Username,
+		&personnel.Password,
 		&personnel.CreatedAt,
 		&personnel.UpdatedAt,
 	)
@@ -74,14 +99,18 @@ func (p *Personnel) UpdatePersonnel(id uuid.UUID, body Personnel) (*Personnel, e
 		UPDATE personnels
 		SET
 			name = $1,
-			updated_at = $2
-		WHERE id=$3
+			username = $3,
+			password = $4,
+			updated_at = $5
+		WHERE id=$6
 	`
 
 	_, err := db.ExecContext(
 		ctx,
 		query,
 		body.Name,
+		body.Username,
+		body.Password,
 		time.Now(),
 		id,
 	)
@@ -108,14 +137,16 @@ func (p *Personnel) CreatePersonnel(personnel Personnel) (*Personnel, error) {
 	defer cancel()
 
 	query := `
-		INSERT INTO personnels (name, created_at, updated_at)
-		values ($1, $2, $3) returning *
+		INSERT INTO personnels (name, username, password, created_at, updated_at)
+		values ($1, $2, $3, $4, $5) returning *
 	`
 
 	_, err := db.ExecContext(
 		ctx,
 		query,
 		personnel.Name,
+		personnel.Username,
+		personnel.Password,
 		time.Now(),
 		time.Now(),
 	)

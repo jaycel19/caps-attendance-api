@@ -61,16 +61,31 @@ func authenticateUser(username, password string) bool {
 		Username: username,
 		Password: password,
 	}
-
-	admin, err := models.Admin.AdminLogin(adminPayload)
-	if err != nil {
+	personnelPayload := services.Personnel{
+		Username: username,
+		Password: password,
+	}
+	
+	personnel, pErr := models.Personnel.PersonnelLogin(personnelPayload)
+	
+	admin, aErr := models.Admin.AdminLogin(adminPayload)
+	if pErr != nil && aErr != nil{
 		return false
 	}
-	err = util.CheckPassword(password, admin.Password)
-	if err != nil {
-		return false
+	
+	if pErr == nil {
+		err := util.CheckPassword(password, personnel.Password)
+		if err != nil {
+			return false
+		}
 	}
 
+	if aErr == nil {
+		err := util.CheckPassword(password, admin.Password)
+		if err != nil {
+			return false
+		}
+	}
 	return true
 }
 

@@ -8,7 +8,30 @@ import (
 	"github.com/google/uuid"
 	"github.com/jaycel19/capstone-api/helpers"
 	"github.com/jaycel19/capstone-api/services"
+	"github.com/jaycel19/capstone-api/util"
 )
+
+func LoginPersonnel(w http.ResponseWriter, r *http.Request) {
+	var loginPayload services.Personnel
+	err := json.NewDecoder(r.Body).Decode(&loginPayload)
+	if err != nil {
+		helpers.MessageLogs.ErrorLog.Println(err)
+		return
+	}
+
+	adminResp, err := models.Personnel.PersonnelLogin(loginPayload)
+	if err != nil {
+		helpers.WriteJSON(w, http.StatusForbidden, helpers.Envelope{"Error": "Wrong username"})
+		return
+	}
+	err = util.CheckPassword(loginPayload.Password, adminResp.Password)
+	if err != nil {
+
+		helpers.WriteJSON(w, http.StatusForbidden, helpers.Envelope{"Error": "Password not match"})
+		return
+	}
+	helpers.WriteJSON(w, http.StatusOK, helpers.Envelope{"Message": "Logged in", "admin": adminResp})
+}
 
 func GetAllPersonnel(w http.ResponseWriter, r *http.Request) {
 	var personnel services.Personnel
