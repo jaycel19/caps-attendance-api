@@ -7,6 +7,7 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
 	"github.com/jaycel19/capstone-api/controllers"
+	"github.com/jaycel19/capstone-api/middlewares"
 )
 
 func Routes() http.Handler {
@@ -20,40 +21,54 @@ func Routes() http.Handler {
 		AllowCredentials: true,
 		MaxAge:           300,
 	}))
-	// Attendees routes
-	router.Get("/api/v1/attendees", controllers.GetAllAttendees)
-	router.Get("/api/v1/attendees/{id}", controllers.GetAttendeeById)
-	router.Get("/api/v1/attendees/{course}", controllers.GetAttendeesByCourse)
-	router.Post("/api/v1/attendees", controllers.CreateAttendee)
-	router.Put("/api/v1/attendees/{id}", controllers.UpdateAttendee)
-	router.Delete("/api/v1/attendees/{id}", controllers.DeleteAttendee)
 
-	// Event routes
-	router.Get("/api/v1/events", controllers.GetAllEvents)
-	router.Get("/api/v1/events/{id}", controllers.GetEventById)
-	//router.Get("/api/v1/events/{course}", controllers.GetEventByCourse)
-	router.Post("/api/v1/events", controllers.CreateEvent)
-	router.Put("/api/v1/events/{id}", controllers.UpdateEvent)
-	router.Delete("/api/v1/events/{id}", controllers.DeleteEvent)
-	
-	// Attendance routes
-	router.Get("/api/v1/attendances", controllers.GetAllAttendance)
-	router.Get("/api/v1/attendances/{id}", controllers.GetAttendanceById)
-	router.Get("/api/v1/attendances/attendee/{id}", controllers.GetAttendanceByAttendeeId)
-	router.Get("/api/v1/attendances/event/{id}", controllers.GetAttendanceByEventId)
-	router.Get("/api/v1/attendances/{timestart}/{timeend}", controllers.GetAttendanceByRange)
-	router.Post("/api/v1/attendances", controllers.CreateAttendance)
-	router.Put("/api/v1/attendances/{id}", controllers.UpdateAttendance)
-	router.Delete("/api/v1/attendances/{id}", controllers.DeleteAttendance)
-	
-	// Personnel routes
-	router.Get("/api/v1/personnels", controllers.GetAllPersonnel)
-	router.Get("/api/v1/personnels/{id}", controllers.GetPersonnelById)
-	//router.Get("/api/v1/events/{course}", controllers.GetEventByCourse)
-	router.Post("/api/v1/personnels", controllers.CreatePersonnel)
-	router.Put("/api/v1/personnels/{id}", controllers.UpdatePersonnel)
-	router.Delete("/api/v1/personnels/{id}", controllers.DeletePersonnel)
-	
+	router.Post("/api/v1/admin/login", controllers.LoginAdmin)
+	router.Post("/api/v1/personnels/login", controllers.LoginPersonnel)
 
+	router.Group(func(auth chi.Router){
+		auth.Use(middlewares.RequireAuth)
+
+		// Attendees routes
+		auth.Get("/api/v1/attendees", controllers.GetAllAttendees)
+		auth.Get("/api/v1/attendees/{id}", controllers.GetAttendeeById)
+		auth.Get("/api/v1/attendees/{course}", controllers.GetAttendeesByCourse)
+		auth.Post("/api/v1/attendees", controllers.CreateAttendee)
+		auth.Put("/api/v1/attendees/{id}", controllers.UpdateAttendee)
+		auth.Delete("/api/v1/attendees/{id}", controllers.DeleteAttendee)
+
+		// Event routes
+		auth.Get("/api/v1/events", controllers.GetAllEvents)
+		auth.Get("/api/v1/events/{id}", controllers.GetEventById)
+		//auth.Get("/api/v1/events/{course}", controllers.GetEventByCourse)
+		auth.Post("/api/v1/events", controllers.CreateEvent)
+		auth.Put("/api/v1/events/{id}", controllers.UpdateEvent)
+		auth.Delete("/api/v1/events/{id}", controllers.DeleteEvent)
+		
+		// Attendance routes
+		auth.Get("/api/v1/attendances", controllers.GetAllAttendance)
+		auth.Get("/api/v1/attendances/{id}", controllers.GetAttendanceById)
+		auth.Get("/api/v1/attendances/attendee/{id}", controllers.GetAttendanceByAttendeeId)
+		auth.Get("/api/v1/attendances/event/{id}", controllers.GetAttendanceByEventId)
+		auth.Get("/api/v1/attendances/{timestart}/{timeend}", controllers.GetAttendanceByRange)
+		auth.Post("/api/v1/attendances", controllers.CreateAttendance)
+		auth.Put("/api/v1/attendances/{id}", controllers.UpdateAttendance)
+		auth.Delete("/api/v1/attendances/{id}", controllers.DeleteAttendance)
+		
+		// Admin routes
+		auth.Get("/api/v1/admin", controllers.GetAllPersonnel)
+		//auth.Get("/api/v1/events/{course}", controllers.GetEventByCourse)
+		auth.Post("/api/v1/admin", controllers.CreateAdmin)
+		
+		auth.Put("/api/v1/admin/{username}", controllers.UpdateAdmin)
+		auth.Delete("/api/v1/admin/{username}", controllers.DeleteAdmin)
+		
+		// Personnel routes
+		auth.Get("/api/v1/personnels", controllers.GetAllPersonnel)
+		auth.Get("/api/v1/personnels/{id}", controllers.GetPersonnelById)
+		//auth.Get("/api/v1/events/{course}", controllers.GetEventByCourse)
+		auth.Post("/api/v1/personnels", controllers.CreatePersonnel)
+		auth.Put("/api/v1/personnels/{id}", controllers.UpdatePersonnel)
+		auth.Delete("/api/v1/personnels/{id}", controllers.DeletePersonnel)
+	})
 	return router
 }
