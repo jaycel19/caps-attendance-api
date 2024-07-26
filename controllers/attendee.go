@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"database/sql"
 	"encoding/json"
 	"net/http"
 
@@ -15,23 +16,33 @@ func GetAllAttendees(w http.ResponseWriter, r *http.Request) {
 	all, err := attendee.GetAllAttendees()
 	if err != nil {
 		helpers.MessageLogs.ErrorLog.Println(err)
+		return
 	}
 	helpers.WriteJSON(w, http.StatusOK, helpers.Envelope{"attendees": all})
 }
 
+
 func GetAttendeeById(w http.ResponseWriter, r *http.Request) {
 	id := chi.URLParam(r, "id")
-	conv_id, err  := uuid.Parse(id)
+	conv_id, err := uuid.Parse(id)
 	if err != nil {
-		helpers.MessageLogs.ErrorLog.Println(err)
+		helpers.MessageLogs.ErrorLog.Println("Invalid ID format:", err)
+		http.Error(w, "Invalid ID format", http.StatusBadRequest)
 		return
 	}
+
 	attendee, err := models.Attendee.GetAttendeeById(conv_id)
 	if err != nil {
-		helpers.MessageLogs.ErrorLog.Println(err)
+		if err == sql.ErrNoRows {
+			helpers.MessageLogs.ErrorLog.Println("Attendee not found:", err)
+			http.Error(w, "Attendee not found", http.StatusNotFound)
+		} else {
+			helpers.MessageLogs.ErrorLog.Println("Error retrieving attendee:", err)
+			http.Error(w, "Error retrieving attendee", http.StatusInternalServerError)
+		}
 		return
 	}
-	// TODO: handle error
+
 	helpers.WriteJSON(w, http.StatusOK, attendee)
 }
 

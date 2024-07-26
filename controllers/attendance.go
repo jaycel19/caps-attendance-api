@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"database/sql"
 	"encoding/json"
 	"net/http"
 	"time"
@@ -57,8 +58,9 @@ func GetAttendanceByEventId(w http.ResponseWriter, r *http.Request) {
 		helpers.MessageLogs.ErrorLog.Println(err)
 	}
 	attendee, err := models.Attendance.GetByEventId(conv_id)
-	if attendee == nil {
+	if err == sql.ErrNoRows {
 		helpers.WriteJSON(w, http.StatusNoContent, helpers.Envelope{})
+		return
 	}
 	if err != nil {
 		helpers.MessageLogs.ErrorLog.Println(err)
@@ -78,7 +80,7 @@ func GetAttendanceByAttendeeId(w http.ResponseWriter, r *http.Request) {
 	
 	attendance, err := models.Attendance.GetByAttendeeID(conv_id)
 	if attendance == nil {
-		helpers.WriteJSON(w, http.StatusNoContent, helpers.Envelope{})
+		helpers.WriteJSON(w, http.StatusNoContent, helpers.Envelope{"":nil})
 	}
 	
 	if err != nil {

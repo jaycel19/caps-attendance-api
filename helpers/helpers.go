@@ -44,6 +44,8 @@ func WriteJSON(w http.ResponseWriter, status int, data interface{}, headers ...h
 	out, err := json.MarshalIndent(data, "", "\t")
 	if err != nil {
 		log.Println("Error in writeJSON: ", err)
+		http.Error(w, "Failed to marshal JSON", http.StatusInternalServerError)
+		return
 	}
 	if len(headers) > 0 {
 		for key, value := range headers[0] {
@@ -51,6 +53,8 @@ func WriteJSON(w http.ResponseWriter, status int, data interface{}, headers ...h
 		}
 	}
 	w.Header().Set("Content-Type", "application/json")
+
+	// WriteHeader must be called before w.Write
 	w.WriteHeader(status)
 	_, err = w.Write(out)
 	if err != nil {

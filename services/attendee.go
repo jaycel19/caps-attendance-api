@@ -118,6 +118,7 @@ func (a *Attendee) GetAttendeeById(id uuid.UUID) (*Attendee, error) {
 		&attendee.Name,
 		&attendee.Program,
 		&attendee.YearLevel,
+		&attendee.Type,
 		&attendee.CreatedAt,
 		&attendee.UpdatedAt,
 	)
@@ -177,7 +178,7 @@ func (a *Attendee) CreateAttendee(attendee Attendee) (*Attendee, error) {
 	defer cancel()
 
 	query := `
-		INSERT INTO attendees (name, program, type, year_level, created_at, updated_at)
+		INSERT INTO attendees (name, program, year_level, type, created_at, updated_at)
 		values ($1, $2, $3, $4, $5, $6) returning *
 	`
 

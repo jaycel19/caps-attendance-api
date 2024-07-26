@@ -3,6 +3,7 @@ package middlewares
 import (
 	"encoding/base64"
 	"errors"
+	"fmt"
 	"net/http"
 	"strings"
 
@@ -67,15 +68,17 @@ func authenticateUser(username, password string) bool {
 	}
 	
 	personnel, pErr := models.Personnel.PersonnelLogin(personnelPayload)
-	
 	admin, aErr := models.Admin.AdminLogin(adminPayload)
+
 	if pErr != nil && aErr != nil{
+		fmt.Print("error no matching")
 		return false
 	}
 	
 	if pErr == nil {
 		err := util.CheckPassword(password, personnel.Password)
 		if err != nil {
+			fmt.Print("error no per match pass")
 			return false
 		}
 	}
@@ -83,6 +86,7 @@ func authenticateUser(username, password string) bool {
 	if aErr == nil {
 		err := util.CheckPassword(password, admin.Password)
 		if err != nil {
+			fmt.Print("error no ad match pass")
 			return false
 		}
 	}

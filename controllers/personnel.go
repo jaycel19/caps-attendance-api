@@ -21,12 +21,11 @@ func LoginPersonnel(w http.ResponseWriter, r *http.Request) {
 
 	adminResp, err := models.Personnel.PersonnelLogin(loginPayload)
 	if err != nil {
-		helpers.WriteJSON(w, http.StatusForbidden, helpers.Envelope{"Error": "Wrong username"})
+		helpers.WriteJSON(w, http.StatusForbidden, helpers.Envelope{"Error": err})
 		return
 	}
 	err = util.CheckPassword(loginPayload.Password, adminResp.Password)
 	if err != nil {
-
 		helpers.WriteJSON(w, http.StatusForbidden, helpers.Envelope{"Error": "Password not match"})
 		return
 	}

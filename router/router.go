@@ -24,6 +24,8 @@ func Routes() http.Handler {
 
 	router.Post("/api/v1/admin/login", controllers.LoginAdmin)
 	router.Post("/api/v1/personnels/login", controllers.LoginPersonnel)
+	router.Post("/api/v1/personnels", controllers.CreatePersonnel)
+	router.Post("/api/v1/admin", controllers.CreateAdmin)
 
 	router.Group(func(auth chi.Router){
 		auth.Use(middlewares.RequireAuth)
@@ -31,7 +33,7 @@ func Routes() http.Handler {
 		// Attendees routes
 		auth.Get("/api/v1/attendees", controllers.GetAllAttendees)
 		auth.Get("/api/v1/attendees/{id}", controllers.GetAttendeeById)
-		auth.Get("/api/v1/attendees/{course}", controllers.GetAttendeesByCourse)
+		//auth.Get("/api/v1/attendees/{course}", controllers.GetAttendeesByCourse)
 		auth.Post("/api/v1/attendees", controllers.CreateAttendee)
 		auth.Put("/api/v1/attendees/{id}", controllers.UpdateAttendee)
 		auth.Delete("/api/v1/attendees/{id}", controllers.DeleteAttendee)
@@ -57,7 +59,6 @@ func Routes() http.Handler {
 		// Admin routes
 		auth.Get("/api/v1/admin", controllers.GetAllPersonnel)
 		//auth.Get("/api/v1/events/{course}", controllers.GetEventByCourse)
-		auth.Post("/api/v1/admin", controllers.CreateAdmin)
 		
 		auth.Put("/api/v1/admin/{username}", controllers.UpdateAdmin)
 		auth.Delete("/api/v1/admin/{username}", controllers.DeleteAdmin)
@@ -66,7 +67,6 @@ func Routes() http.Handler {
 		auth.Get("/api/v1/personnels", controllers.GetAllPersonnel)
 		auth.Get("/api/v1/personnels/{id}", controllers.GetPersonnelById)
 		//auth.Get("/api/v1/events/{course}", controllers.GetEventByCourse)
-		auth.Post("/api/v1/personnels", controllers.CreatePersonnel)
 		auth.Put("/api/v1/personnels/{id}", controllers.UpdatePersonnel)
 		auth.Delete("/api/v1/personnels/{id}", controllers.DeletePersonnel)
 	})
